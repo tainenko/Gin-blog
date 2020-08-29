@@ -16,3 +16,12 @@ func GetTagTotal(maps interface{}) (count int) {
 	db.Model(&Tag{}).Where(maps).Count(&count)
 	return
 }
+
+func ExistTagByName(name string) bool {
+	var tag Tag
+	db.Select("id").Where("name=?", name).First(&tag)
+	if tag.ID > 0 {
+		return true
+	}
+	return false
+}
