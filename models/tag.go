@@ -25,3 +25,12 @@ func ExistTagByName(name string) bool {
 	}
 	return false
 }
+
+func AddTag(name string, state int, createBy string) bool {
+	db.Create(&Tag{
+		Name:     name,
+		State:    state,
+		CreateBy: createBy,
+	})
+	return true
+}
