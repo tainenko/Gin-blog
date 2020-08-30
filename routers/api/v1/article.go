@@ -133,7 +133,7 @@ func EditArticle(c *gin.Context) {
 	if !valid.HasErrors() {
 		if models.ExistArticleByID(id) {
 			if models.ExistTagByID(tagId) {
-				data := make(map[string]interface)
+				data := make(map[string]interface{})
 				if tagId > 0 {
 					data["tag_id"] = tagId
 				}
