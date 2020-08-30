@@ -70,6 +70,44 @@ func GetArticles(c *gin.Context) {
 
 }
 func AddArticle(c *gin.Context) {
+	tagId := com.StrTo(c.Query("tag_id")).MustInt()
+	title := c.Query("tital")
+	desc := c.Query("desc")
+	content := c.Query("content")
+	createdBy := c.Query("created_by")
+	state := com.StrTo(c.DefaultQuery("state", "0")).MustInt()
+	valid := validation.Validation{}
+	valid.Min(tagId, 1, "tag_id").Message("標籤ID必須大於0")
+	valid.Required(title, "title").Message("標題不能為空")
+	valid.Required(desc, "desc").Message("簡述不能為空")
+	valid.Required(content, "content").Message("內容不能為空")
+	valid.Required(createdBy, "created_by").Message("創建人不能為空")
+	valid.Range(state, 0, 1, "state").Message("狀態只允許0或1")
+	code := e.INVALID_PARAMS
+	if !valid.HasErrors() {
+		if models.ExistArticleByID(tagId) {
+			data := make(map[string]interface{})
+			data["tag_id"] = tagId
+			data["title"] = title
+			data["desc"] = desc
+			data["content"] = content
+			data["created_by"] = createdBy
+			data["state"] = state
+			models.AddArticle(data)
+			code = e.SUCCESS
+		} else {
+			code = e.ERROR_NOT_EXIST_TAG
+		}
+	} else {
+		for _, err := range valid.Errors {
+			log.Println(err.Key, err.Message)
+		}
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"code": code,
+		"msg":  e.GetMsg(code),
+		"data": make(map[string]interface{}),
+	})
 
 }
 func EditArticle(c *gin.Context) {
