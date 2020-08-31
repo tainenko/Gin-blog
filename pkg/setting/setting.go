@@ -28,7 +28,7 @@ func init() {
 }
 
 func LoadBase() {
-	RunMode = Cfg.Section("").Key("RUN_MODE").Must - String("debug")
+	RunMode = Cfg.Section("").Key("RUN_MODE").MustString("debug")
 }
 
 func LoadServer() {

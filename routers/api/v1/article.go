@@ -5,7 +5,7 @@ import (
 	"github.com/gin-blog/models"
 	"github.com/gin-blog/pkg/e"
 	"github.com/gin-blog/pkg/setting"
-	"github.com/gin-blog/util"
+	"github.com/gin-blog/pkg/util"
 	"github.com/gin-gonic/gin"
 	"github.com/unknwon/com"
 	"log"

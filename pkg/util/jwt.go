@@ -1,4 +1,4 @@
-package jwt
+package util
 
 import (
 	jwt "github.com/dgrijalva/jwt-go"
