@@ -43,6 +43,8 @@ func init() {
 	db.SingularTable(true)
 	db.DB().SetMaxIdleConns(10)
 	db.DB().SetMaxOpenConns(100)
+	db.Callback().Create().Replace("gorm:update_time_stamp",updateTimeStampForCreateCallback)
+	db.Callback().Update().Replace("gorm:update_time_stamp",updateTimeStampForUpdateCallback)
 }
 func updateTimeStampForCreateCallback(scope *gorm.Scope) {
 	if !scope.HasError() {
