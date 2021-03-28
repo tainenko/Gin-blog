@@ -6,6 +6,7 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"log"
+	"time"
 )
 
 var db *gorm.DB
@@ -42,6 +43,21 @@ func init() {
 	db.SingularTable(true)
 	db.DB().SetMaxIdleConns(10)
 	db.DB().SetMaxOpenConns(100)
+}
+func updateTimeStampForCreateCallback(scope *gorm.Scope) {
+	if !scope.HasError() {
+		nowTime := time.Now().Unix()
+		if createTimeField, ok := scope.FieldByName("CreateOn"); ok {
+			if createTimeField.IsBlank {
+				createTimeField.Set(nowTime)
+			}
+		}
+		if modifyTimerField, ok := scope.FieldByName("ModifiedOn"); ok {
+			if modifyTimerField.IsBlank {
+				modifyTimerField.Set(nowTime)
+			}
+		}
+	}
 }
 func CloseDB() {
 	defer db.Close()
