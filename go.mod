@@ -13,6 +13,7 @@ require (
 	github.com/json-iterator/go v1.1.10 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
+	github.com/robfig/cron v1.2.0 // indirect
 	github.com/shiena/ansicolor v0.0.0-20200828132404-15bd6b44746e // indirect
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/unknwon/com v1.0.1

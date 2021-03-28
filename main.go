@@ -10,7 +10,7 @@ import (
 func main() {
 	router := routers.InitRouter()
 	s := &http.Server{
-		Addr: fmt.Sprintf(":%d", setting.HTTPPost),
+		Addr:           fmt.Sprintf(":%d", setting.HTTPPost),
 		Handler:        router,
 		ReadTimeout:    setting.ReadTimeout,
 		WriteTimeout:   setting.WriteTimeout,
