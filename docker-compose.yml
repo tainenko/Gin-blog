@@ -1,0 +1,51 @@
+version: '1.0'
+
+volumes:
+  db: {}
+  rdb: {}
+
+services:
+  # MySQL
+  mysql:
+    #env_file: .env
+    image: mysql:latest
+    container_name: mysql
+    ports:
+      - "3306"
+    volumes:
+      - ~/data/docker-mysql:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootroot
+      MYSQL_DATABASE: blog
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+
+  # Redis
+  redis:
+    image: redis:latest
+    container_name: web-redis
+    ports:
+      - "6379"
+    volumes:
+      - rdb:/data
+    restart: always
+    command: redis-server --requirepass password --appendonly yes
+
+  # golang:gin-blog
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: gin-blog:1.0
+    container_name: web
+    ports:
+      - "8080"
+    environment:
+      ENC_KEY: ${ENC_KEY}
+      ENC_IV: ${ENC_IV}
+    depends_on:
+      - mysql
+      - redis
+    restart: always
+    command: /go/bin/ginserver -f ./configs/docker.toml -crypto
