@@ -41,6 +41,17 @@ type Database struct {
 }
 
 var DatabaseSetting = &Database{}
+
+type Redis struct {
+	Host        string
+	Password    string
+	MaxIdle     int
+	MaxActive   int
+	IdleTimeout time.Duration
+}
+
+var RedisSetting = &Redis{}
+
 var cfg *ini.File
 
 // Setup initialize the configuration instance
