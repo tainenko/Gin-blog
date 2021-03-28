@@ -54,7 +54,7 @@ func GetArticles(c *gin.Context) {
 		code := e.INVALID_PARAMS
 		if !valid.HasErrors() {
 			code = e.SUCCESS
-			data["lists"] = models.GetArticles(util.GetPage(c), setting.PageSize, maps)
+			data["lists"] = models.GetArticles(util.GetPage(c), setting.AppSetting.PageSize, maps)
 			data["total"] = models.GetArticleTotal(maps)
 		} else {
 			for _, err := range valid.Errors {
@@ -69,12 +69,24 @@ func GetArticles(c *gin.Context) {
 	}
 
 }
+
+type AddArticleForm struct {
+	TagID         int    `form:"tag_id" valid:"Required;Min(1)"`
+	Title         string `form:"title" valid:"Required;MaxSize(100)"`
+	Desc          string `form:"desc" valid:"Required;MaxSize(255)"`
+	Content       string `form:"content" valid:"Required;MaxSize(65535)"`
+	CreatedBy     string `form:"created_by" valid:"Required;MaxSize(100)"`
+	CoverImageUrl string `form:"cover_image_url" valid:"Required;MaxSize(255)"`
+	State         int    `form:"state" valid:"Range(0,1)"`
+}
+
 func AddArticle(c *gin.Context) {
 	tagId := com.StrTo(c.Query("tag_id")).MustInt()
 	title := c.Query("tital")
 	desc := c.Query("desc")
 	content := c.Query("content")
 	createdBy := c.Query("created_by")
+	coverImageUrl := c.Query("cover_image_url")
 	state := com.StrTo(c.DefaultQuery("state", "0")).MustInt()
 	valid := validation.Validation{}
 	valid.Min(tagId, 1, "tag_id").Message("標籤ID必須大於0")
@@ -92,6 +104,7 @@ func AddArticle(c *gin.Context) {
 			data["desc"] = desc
 			data["content"] = content
 			data["created_by"] = createdBy
+			data["cover_image_url"] = coverImageUrl
 			data["state"] = state
 			models.AddArticle(data)
 			code = e.SUCCESS
@@ -110,6 +123,18 @@ func AddArticle(c *gin.Context) {
 	})
 
 }
+
+type EditArticleForm struct {
+	ID            int    `form:"id" valid:"Required;Min(1)"`
+	TagID         int    `form:"tag_id" valid:"Required;Min(1)"`
+	Title         string `form:"title" valid:"Required;MaxSize(100)"`
+	Desc          string `form:"desc" valid:"Required;MaxSize(255)"`
+	Content       string `form:"content" valid:"Required;MaxSize(65535)"`
+	ModifiedBy    string `form:"modified_by" valid:"Required;MaxSize(100)"`
+	CoverImageUrl string `form:"cover_image_url" valid:"Required;MaxSize(255)"`
+	State         int    `form:"state" valid:"Range(0,1)"`
+}
+
 func EditArticle(c *gin.Context) {
 	valid := validation.Validation{}
 	id := com.StrTo(c.Param("id")).MustInt()
@@ -117,6 +142,7 @@ func EditArticle(c *gin.Context) {
 	title := c.Query("tital")
 	desc := c.Query("desc")
 	content := c.Query("content")
+	coverImageUrl := c.Query("cover_image_url")
 	modifiedBy := c.Query("modified_by")
 	var state int = -1
 	if arg := c.Query("state"); arg != "" {
@@ -145,6 +171,9 @@ func EditArticle(c *gin.Context) {
 				}
 				if content != "" {
 					data["content"] = content
+				}
+				if coverImageUrl != "" {
+					data["cover_image_url"] = coverImageUrl
 				}
 				data["modified_by"] = modifiedBy
 				models.EditArticle(id, data)
