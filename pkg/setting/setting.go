@@ -6,6 +6,8 @@ import (
 	"time"
 )
 
+const PageSize = 20
+
 type App struct {
 	JwtSecret       string
 	PageSize        int
@@ -61,7 +63,6 @@ func Setup() {
 	if err != nil {
 		log.Fatalf("setting.Setup, fail to parse 'conf/app.ini': %v", err)
 	}
-
 	mapTo("app", AppSetting)
 	mapTo("server", ServerSetting)
 	mapTo("database", DatabaseSetting)
